@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class MyPosts extends Component
+class AddRecipe extends Component
 {
     public function render()
     {
-        return view('livewire.my-posts');
+        return view('livewire.add-recipe');
     }
 }

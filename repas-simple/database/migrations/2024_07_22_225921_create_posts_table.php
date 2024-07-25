@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title',100);
             $table->text('text');
+            $table->unsignedBigInteger('user_id'); // Foreign key to users table
             $table->integer('post_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
