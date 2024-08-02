@@ -1,6 +1,7 @@
 <div>
-    <form>
+    <form method="post" wire:submit="save">
         <div>
+            <h2 class="text-2xl font-bold text-gray-200">Add Recipes</h2>
 
             <label for="cover-photo" class="block text-lg font-medium leading-6 text-gray-200">Recipe Photo</label>
 
@@ -13,9 +14,9 @@
                     </svg>
 
                     <div class="mt-4 flex text-sm leading-6 text-gray-200">
-                        <label for="file-upload" class="relative cursor-pointer border-gray-200 rounded-sm font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-gray-200">
+                        <label for="file-upload" class=" cursor-pointer border-gray-200 rounded-sm font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-gray-200">
                             <span >Upload a file</span>
-                            <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                            <input id="file-upload" name="file-upload" wire:model="photo" type="file" class="sr-only">
                         </label>
                         <p class="pl-1">or drag and drop</p>
                     </div>
@@ -31,12 +32,12 @@
             <div>
                 <label class="text-base font-medium leading-7 block text-lg font-medium leading-6 text-gray-200 pt-10">Title</label>
                 <p class="mt-1 text-sm leading-6 text-gray-600">The recipe name / title shouldn't be long.</p>
-                <input type="text" name="text" id="text" autocomplete="Recipe Name" class="bg-gray-800 text-gray-200 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-200 sm:text-sm sm:leading-6">
+                <input type="text" name="text" id="text" autocomplete="Recipe Name" class="bg-gray-800 text-gray-200 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-200 sm:text-sm sm:leading-6" wire:model="title">
             </div>
 
             <div>
                 <label class="text-base font-medium leading-7 block text-lg font-medium leading-6 text-gray-200 pt-10">Description</label>
-                <textarea type="text" name="text" id="text" autocomplete="Recipe Name" class="bg-gray-800 text-gray-200 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-200 sm:text-sm sm:leading-6">
+                <textarea type="text" name="text" id="text" autocomplete="Recipe Name" class="bg-gray-800 text-gray-200 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-200 sm:text-sm sm:leading-6" wire:model="text">
                 </textarea>
             </div>
             

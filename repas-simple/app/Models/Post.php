@@ -13,4 +13,16 @@ class Post extends Model
     public function users() : BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function photo()
+    {
+        return $this->hasOne(Photo::class);
+    }
+
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+    
+
 }

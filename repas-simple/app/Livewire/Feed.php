@@ -10,20 +10,18 @@ class Feed extends Component
 {
 
     // Created a variable that stors all the fertched data
-    public $posts;
-    public $users;
-
-    public function mount () {
-        $this->posts = Post::with('users')->get();
-    }
-
-
+    public $search = '';
 
     public function render()
     {
-        // Returning an array of the data
+        // Fetch posts with the search term
+        $posts = Post::with(['users', 'photo']) // Eager load relationships
+                      ->where('title', 'like', '%' . $this->search . '%') // Filter posts based on search term
+                      ->orderBy('created_at', 'desc')
+                      ->get();
+
         return view('livewire.feed', [
-            'posts' => $this->posts,
+            'posts' => $posts,
         ]);
     }
 }

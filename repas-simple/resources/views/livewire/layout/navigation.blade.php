@@ -40,6 +40,12 @@ new class extends Component
                         {{ __('Profile') }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('favoris')" :active="request()->routeIs('favoris')" wire:navigate>
+                        {{ __('Favoris') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
