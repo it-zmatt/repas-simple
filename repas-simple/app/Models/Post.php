@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Post extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'title',
+        'text',
+        'user_id', // Include all the attributes you want to be mass assignable
+    ];
     
     public function users() : BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
@@ -24,5 +29,9 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
     }
     
+    public function comments()
+{
+    return $this->hasMany(Comments::class);
+}
 
 }

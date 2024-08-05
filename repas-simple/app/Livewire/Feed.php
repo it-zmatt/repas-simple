@@ -16,6 +16,7 @@ class Feed extends Component
     {
         // Fetch posts with the search term
         $posts = Post::with(['users', 'photo']) // Eager load relationships
+                      ->withCount('comments')
                       ->where('title', 'like', '%' . $this->search . '%') // Filter posts based on search term
                       ->orderBy('created_at', 'desc')
                       ->get();

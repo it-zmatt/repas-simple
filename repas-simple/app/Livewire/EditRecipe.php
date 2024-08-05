@@ -6,86 +6,98 @@ use App\Models\Photo;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+
 
 class EditRecipe extends Component
 {
-    public $post;
-
-    public $title;
-    public $text;
-    public $photo;
-
-    public function save() {
-        $this->validate([
+    use WithFileUploads;
+    
+        public $post;
+        public $title;
+        public $text;
+        public $photo;
+    
+        protected $rules = [
             'title' => 'required|string|max:255',
             'text' => 'required|string',
-            'photo' => 'nullable|image|max:1024', // Add validation for the photo if provided
-        ]);
+            'photo' => 'nullable|image|max:10240', // Add validation for the photo if provided
+        ];
     
-        if ($this->post) {
-            // Update existing post
-            $this->post->title = $this->title;
-            $this->post->text = $this->text;
-            $this->post->save();
-            
-            // Check if a new photo is provided
-            if ($this->photo) {
-                // Delete the old photo if it exists
-                if ($this->post->photo) {
-                    Storage::disk('public')->delete($this->post->photo->photo_url);
+        public function save()
+        {
+            $validatedData = $this->validate();
+    
+            if ($this->post) {
+                // Update existing post
+                $this->post->update([
+                    'title' => $this->title,
+                    'text' => $this->text,
+                ]);
+    
+                // Check if a new photo is provided
+                if ($this->photo) {
+                    // Delete the old photo if it exists
+                    if ($this->post->photo) {
+                        Storage::disk('public')->delete($this->post->photo->photo_url);
+                    }
+    
+                    // Save the new photo
+                    $photoPath = $this->photo->store('media', 'public');
+                    if ($this->post->photo) {
+                        // Update existing photo record
+                        $this->post->photo->update([
+                            'photo_url' => $photoPath,
+                        ]);
+                    } else {
+                        // Create a new photo record
+                        $this->post->photo()->create([
+                            'photo_url' => $photoPath,
+                        ]);
+                    }
                 }
-                
-                // Save the new photo
-                $photoPath = $this->photo->store('media', 'public');
-                if ($this->post->photo) {
-                    // Update existing photo record
-                    $this->post->photo->photo_url = $photoPath;
-                    $this->post->photo->save();
-                } else {
-                    // Create a new photo record
-                    $img = new Photo();
-                    $img->post_id = $this->post->id;
-                    $img->photo_url = $photoPath;
-                    $img->save();
+            } else {
+                // Create a new post
+                $post = Post::create([
+                    'title' => $this->title,
+                    'text' => $this->text,
+                    'user_id' => Auth::id(),
+                ]);
+    
+                // Handle file upload and save the photo
+                if ($this->photo) {
+                    $photoPath = $this->photo->store('media', 'public');
+                    $post->photo()->create([
+                        'photo_url' => $photoPath,
+                    ]);
                 }
             }
-        } else {
-            // Create a new post
-            $post = new Post();
-            $post->title = $this->title;
-            $post->text = $this->text;
-            $post->post_id = Auth::id();
-            $post->user_id = Auth::id();
-            $post->save();
-            
-            // Handle file upload and save the photo
-            if ($this->photo) {
-                $photoPath = $this->photo->store('media', 'public');
-                $img = new Photo();
-                $img->post_id = $post->id;
-                $img->photo_url = $photoPath;
-                $img->save();
-            }
+    
+            // Reset the form fields after save
+            $this->reset(['title', 'text', 'photo']);
+            // Optional: You can trigger a browser event to show a notification
+            // $this->dispatchBrowserEvent('notification', ['message' => 'Recipe saved successfully.']);
+    
+            return redirect()->to('/dashboard');
         }
     
-        $this->reset();
-        return redirect()->to('/dashboard');
-    }
+        public function mount($id)
+        {
+            $this->fetchPosts($id);
+        }
     
-
-    public function mount ($id) {
-        $this->fetchPosts($id);
-    }
-
-    public function fetchPosts($id) {
-        $this->post = Post::find($id);
-        $this->title = $this->post->title;
-        $this->text = $this->post->text;
+        public function fetchPosts($id)
+        {
+            $this->post = Post::findOrFail($id);
+            $this->title = $this->post->title;
+            $this->text = $this->post->text;
+        }
     
-    }
-
+        
+    
     public function render()
     {
         return view('livewire.edit-recipe', [

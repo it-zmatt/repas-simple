@@ -16,7 +16,16 @@ class AddRecipe extends Component
     public $text;
     public $photo;
 
-    public function save() {
+    protected $rules = [
+        'title' => 'required|string|max:255',
+        'text' => 'required|string',
+        'photo' => 'required|image|mimes:jpeg,png,gif|max:10240', // max 10MB
+    ];
+
+    public function save()
+    {
+        $this->validate(); // Apply the validation rules
+
         $post = new Post();
         $post->title = $this->title;
         $post->text = $this->text;
@@ -34,7 +43,6 @@ class AddRecipe extends Component
 
         $this->reset();
         return redirect()->to('/dashboard');
-
     }
 
 
