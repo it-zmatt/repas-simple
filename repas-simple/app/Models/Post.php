@@ -33,5 +33,4 @@ class Post extends Model
 {
     return $this->hasMany(Comments::class);
 }
-
 }
