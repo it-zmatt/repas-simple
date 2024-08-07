@@ -4,4 +4,5 @@ Repas Simple app is a community-driven platform where food lovers can share, and
 
 ## Home Page
 The feed is where the user search or browse different food options and recipes.
-<img src="Screenshots/home.png" alt="Feature" width="300" height="200">
+<br>
+<img src="Screenshots/home.png" alt="Feature" width="max" height="auto">
